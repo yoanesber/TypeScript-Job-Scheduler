@@ -329,7 +329,8 @@ This section describes how to test the batch job processor using the provided te
     - Restart the job scheduler service.
 
 - **Expected Result**: The job should be added to the `batch_jobs` table with the correct `cronExpression` and `status` set to `active`, also the job should be scheduled to run at the specified time with `nextRunAt` set accordingly.
-- **Evidence**: Check the `batch_jobs` table for the new entry.
+- **Evidence**: Check the `batch_jobs` table for the new entry.  
+
 | id | jobName                  | cronExpression     | status | lastRunAt          | nextRunAt           | createdAt           |
 |----|--------------------------|--------------------|--------|--------------------|---------------------|---------------------|
 | 1  | other-daily-reports      | 0 0 * * *          | active | [NULL]             | 2025-07-21 00:00:00 | 2025-07-20 15:44:55 |
@@ -341,14 +342,16 @@ This section describes how to test the batch job processor using the provided te
 - **Test Case**: Set up the seeder to run a job that processes transactions or generates reports.
     - Use the existing job `generate-daily-reports` with `cronExpression` set to `0 18 17 * * *`.
     - Wait for the job to trigger based on the cron schedule.
-- **Expected Result**: The job should run and update the `lastRunAt` and `nextRunAt` fields accordingly. A new entry should be created in `batch_job_logs`.
-- **Evidence**: Check the `batch_jobs` and `batch_job_logs` tables after execution.
-`batch_jobs` table after execution:
+- **Expected Result**: The job should run and update the `lastRunAt` and `nextRunAt` fields accordingly. A new entry should be created in `batch_job_logs`.  
+- **Evidence**: Check the `batch_jobs` and `batch_job_logs` tables after execution.  
+`batch_jobs` table after execution:  
+
 | id | jobName                  | cronExpression    | Status | lastRunAt           | nextRunAt           | createdAt           |
 |----|--------------------------|-------------------|--------|---------------------|---------------------|---------------------|
 | 1  | generate-daily-reports   | 0 18 17 * * *     | active | 2025-07-20 17:18:00 | 2025-07-21 17:18:00 | 2025-07-20 17:16:45 |
 
-`batch_job_logs` table after execution:
+`batch_job_logs` table after execution:  
+
 | id | jobName                | cronExpression    | startedAt           | finishedAt          | Status   | totalProcessed | totalSuccess  | totalFailure  | failureReason  |
 |----|------------------------|-------------------|---------------------|---------------------|----------|----------------|---------------|---------------|----------------|
 | 1  | generate-daily-reports | 0 18 17 * * *     | 2025-07-20 17:18:00 | 2025-07-20 17:18:00 | success  | 278            | 278           | 0             | (empty)        |
@@ -359,8 +362,8 @@ This section describes how to test the batch job processor using the provided te
 - **Test Case**: Run a job that includes CSV export (e.g., daily transaction report).
 - **Expected Result**: A timestamped `.csv` file should be created in the `exports/` folder with correctly formatted data.
 - **Evidence**: Check the `exports/` directory for the generated CSV file.
-    - Example: `exports/daily-report_2025-07-18_2025-07-20T10-18-00-150Z.csv`
-    - **CSV Content**: The CSV should contain headers and data rows corresponding to the processed transactions.
+    - Example: `exports/daily-report_2025-07-18_2025-07-20T10-18-00-150Z.csv`  
+    - **CSV Content**: The CSV should contain headers and data rows corresponding to the processed transactions.  
         ```text
         id,type,amount,status,consumerId,createdAt,updatedAt
         fd4fef84-c14d-4403-9dcc-9706ec05c8c8,debit,1304.00,failed,330d8c6c-9047-4c05-8f3f-f4f737aac70a,Sat Jul 19 2025 20:54:40 GMT+0700 (Western Indonesia Time),Sun Mar 29 2026 12:01:14 GMT+0700 (Western Indonesia Time)
@@ -370,17 +373,18 @@ This section describes how to test the batch job processor using the provided te
 
 ### ❌ Failure Handling
 
-- **Test Objective**: Simulate job execution errors to ensure logging and failure states work.
-- **Test Case**: Force an exception within a job (e.g., by add an invalid operation).
+- **Test Objective**: Simulate job execution errors to ensure logging and failure states work.  
+- **Test Case**: Force an exception within a job (e.g., by add an invalid operation).  
     - Modify the job logic to throw an error intentionally in `services/transaction.service.ts`.
     ```typescript
     if(total % 10 === 0) {
         throw new Error(`Simulated processing error on transaction-id ${transaction.id}`);
     }
     ```
-- **Expected Result**: The job log should record the status as `failed` with `failureReason` populated.
-- **Evidence**: Check the `batch_job_logs` table for the failed job entry.
+- **Expected Result**: The job log should record the status as `failed` with `failureReason` populated.  
+- **Evidence**: Check the `batch_job_logs` table for the failed job entry.  
 `batch_job_logs` table after failure:
+
 | id | jobName                | cronExpression    | startedAt           | finishedAt          | Status   | totalProcessed | totalSuccess  | totalFailure  | failureReason  |
 |----|------------------------|-------------------|---------------------|---------------------|----------|----------------|---------------|---------------|----------------|
 | 1  | process-transactions   | 0 36 17 * * *     | 2025-07-20 17:36:00 | 2025-07-20 17:36:00 | failed   | 10             | 9             | 1             | Simulated processing error on transaction-id 1 |
