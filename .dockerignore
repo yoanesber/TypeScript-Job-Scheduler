@@ -1,0 +1,16 @@
+# These files and directories will be ignored by Docker when building the image.
+README.md
+Makefile
+*.md
+.gitignore
+.git/
+logs/
+exports/
+docker/
+.vscode/
+node_modules/
+# src/
+# *.ts
+# *.tsx
+# tsconfig.json
+*.log
