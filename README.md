@@ -344,6 +344,7 @@ This section describes how to test the batch job processor using the provided te
     - Wait for the job to trigger based on the cron schedule.
 - **Expected Result**: The job should run and update the `lastRunAt` and `nextRunAt` fields accordingly. A new entry should be created in `batch_job_logs`.  
 - **Evidence**: Check the `batch_jobs` and `batch_job_logs` tables after execution.  
+
 `batch_jobs` table after execution:  
 
 | id | jobName                  | cronExpression    | Status | lastRunAt           | nextRunAt           | createdAt           |
@@ -383,6 +384,7 @@ This section describes how to test the batch job processor using the provided te
     ```
 - **Expected Result**: The job log should record the status as `failed` with `failureReason` populated.  
 - **Evidence**: Check the `batch_job_logs` table for the failed job entry.  
+
 `batch_job_logs` table after failure:
 
 | id | jobName                | cronExpression    | startedAt           | finishedAt          | Status   | totalProcessed | totalSuccess  | totalFailure  | failureReason  |
