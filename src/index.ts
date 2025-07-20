@@ -67,6 +67,7 @@ const shutdown = async () => {
 
     try {
         // 1. Gracefully shutdown all batch jobs
+        await BatchJobConfig.cancelAllActiveJobs();
         await BatchJobConfig.gracefulShutdown();
         logger.info("Batch jobs are shutdown");
 

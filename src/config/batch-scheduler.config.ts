@@ -120,9 +120,14 @@ class BatchJobConfig {
     }
 
     public async cancelAllActiveJobs(): Promise<void> {
-        const jobs = await BatchJob.findAll({
-            where: {status: 'active'}
-        });
+        // Get jobNames of all active jobs
+        if (Object.keys(this.jobMap).length === 0) {
+            logger.warn("No active jobs found");
+            return;
+        }
+        const jobs: any[] = (Object.keys(this.jobMap)).map(jobName => ({
+            jobName: jobName,
+        }));
 
         try {
             for (const job of jobs) {

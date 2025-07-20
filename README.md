@@ -23,7 +23,7 @@ Stores metadata and configuration for each scheduled job.
 | id              | INTEGER     | Auto-incrementing primary key              |
 | jobName         | STRING      | Unique job identifier                      |
 | cronExpression  | TEXT        | Cron format string for scheduling          |
-| status          | ENUM        | One of: `active`, `inactive`, `paused`     |
+| status          | STRING      | One of: `active`, `inactive`, `cancelled`  |
 | lastRunAt       | DATETIME    | Last execution timestamp                   |
 | nextRunAt       | DATETIME    | Scheduled next execution timestamp         |
 | createdAt       | DATETIME    | Timestamp when the record was created      |
