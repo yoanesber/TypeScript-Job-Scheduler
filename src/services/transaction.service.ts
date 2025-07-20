@@ -36,9 +36,9 @@ class TransactionService {
                         {status: 'completed'}
                     );
 
-                    if(total % 10 === 0) {
-                        throw new Error(`Simulated processing error on transaction-id ${transaction.id}`);
-                    }
+                    // if(total % 10 === 0) {
+                    //     throw new Error(`Simulated processing error on transaction-id ${transaction.id}`);
+                    // }
                 } catch (error) {
                     failure++;
                     failureReason.push(String(error));
